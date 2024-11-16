@@ -38,7 +38,7 @@ function NavBar() {
         <MotionNavLink
          variants={variants}
         whileHover="hover"
-         to="/Chores">Chores</MotionNavLink>
+         to="/gallery">Gallery</MotionNavLink>
         </div>
     </div>
     <MobileMenu/>

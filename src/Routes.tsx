@@ -1,8 +1,8 @@
 import React from 'react'
 import PantryPlanner from "./pages/PantryPlanner"
-import Home from "./pages/Home"
+import Home from "./pages/HomePages/Home"
 import Events from "./pages/Events"
-import Chores from "./pages/Chores"
+import Gallery from './pages/Gallery'
 import CommunicationHub from "./pages/CommunicationHub"
 import { AnimatePresence, motion } from 'framer-motion'
 import { Routes, Route, useLocation } from'react-router-dom'
@@ -49,11 +49,11 @@ export default function AnimatedRoutes(){
        element={<PageWrapper><Events/></PageWrapper>}
        />
        <Route
-       path="/chores"
-       element={<PageWrapper><Chores/></PageWrapper>}
+       path="/gallery"
+       element={<PageWrapper><Gallery/></PageWrapper>}
        />
        <Route
-       path="/communication-hub"
+       path="/communicationhub"
        element={<PageWrapper><CommunicationHub/></PageWrapper>}
        />
       </Routes>

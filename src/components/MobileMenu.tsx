@@ -58,7 +58,7 @@ function MobileMenu() {
             <NavLink className="w-full flex justify-center p-3 hover:text-primary-light border-b-2 hover:border-b-primary-light border-b-white" to="/pantryplanner">Pantry Planner</NavLink>
             <NavLink className="w-full flex justify-center p-3 hover:text-primary-light border-b-2 hover:border-b-primary-light border-b-white" to="/events">Events</NavLink>
             <NavLink className="w-full flex justify-center p-3 hover:text-primary-light border-b-2 hover:border-b-primary-light border-b-white" to="/communicationhub">Communication Hub</NavLink>
-            <NavLink className="w-full flex justify-center p-3 hover:text-primary-light border-b-2 hover:border-b-primary-light border-b-white" to="/chores">Chores</NavLink>
+            <NavLink className="w-full flex justify-center p-3 hover:text-primary-light border-b-2 hover:border-b-primary-light border-b-white" to="/gallery">Gallery</NavLink>
           </div>
           <div className="bottom flex gap-6 absolute bottom-8">
             <div className="settings hover:text-primary-light text-lg cursor-pointer">
