@@ -4,6 +4,7 @@ import NavBar from "./components/NavBar"
 import { useAppDispatch, useTypedSelector } from "./Redux/ReduxHooks"
 import { closeMobileNav } from "./Redux/NavSlice"
 import { closeNotificationModal } from "./Redux/CommunicationHubSlice"
+import { enlargeModalClosed } from "./Redux/GallerySlice"
 
 
 
@@ -12,6 +13,7 @@ function App() {
 const dispatch = useAppDispatch();
 const mobileNavState = useTypedSelector((state) => state.navigation.mobileNavState)
 const notificationModalState = useTypedSelector((state) => state.communicationHub.notificationModalState)
+const enlargeModalState = useTypedSelector((state) => state.gallery.enlargeModalState)
   return (
     <BrowserRouter>
     <div
@@ -19,6 +21,7 @@ const notificationModalState = useTypedSelector((state) => state.communicationHu
       () =>{
        if(mobileNavState){dispatch(closeMobileNav())}
        if(notificationModalState){dispatch(closeNotificationModal())}
+       if(enlargeModalState){dispatch(enlargeModalClosed())}
       }
       }
      className="app flex relative flex-col min-h-screen">

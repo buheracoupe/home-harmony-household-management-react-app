@@ -1,8 +1,11 @@
 import { nanoid } from "nanoid"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { IoCloseOutline } from "react-icons/io5";
 import { RxCaretLeft } from "react-icons/rx";
 import { RxCaretRight } from "react-icons/rx";
+import { MdOutlineAddAPhoto } from "react-icons/md";
+import { useTypedSelector, useAppDispatch } from "../Redux/ReduxHooks";
+import { enlargeModalOpen } from "../Redux/GallerySlice";
 
 
  export const imageArray = [
@@ -10,8 +13,9 @@ import { RxCaretRight } from "react-icons/rx";
   { id: nanoid(), src: 'https://images.pexels.com/photos/1128318/pexels-photo-1128318.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1', alt: 'Image 2' },
   { id: nanoid(), src: 'https://images.pexels.com/photos/4546025/pexels-photo-4546025.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1', alt: 'Image 3' },
   { id:nanoid(), src: "https://images.pexels.com/photos/28847012/pexels-photo-28847012/free-photo-of-stunning-view-of-brussels-town-hall-in-belgium.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1", alt: "Image 4"},
-  {id:nanoid(), src:"https://images.pexels.com/photos/20136034/pexels-photo-20136034/free-photo-of-black-mercedes-brabus-g-wagon.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1", alt: "Image 4"}
-
+  { id:nanoid(), src:"https://images.pexels.com/photos/20136034/pexels-photo-20136034/free-photo-of-black-mercedes-brabus-g-wagon.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1", alt: "Image 4"},
+  { id:nanoid(), src:"https://images.pexels.com/photos/4262414/pexels-photo-4262414.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1", alt:"image 5"},
+  { id:nanoid(), src:"https://images.pexels.com/photos/936048/pexels-photo-936048.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1", alt:"image 6"}
 ]
 
 
@@ -24,47 +28,88 @@ function Gallery() {
 
   const [thisImageisShowing, setTheShowingImage] = useState<string | null>(null)
   const [currentImageIndex, setCurrentImageIndex] = useState<number>(0)
-  return (
-    <div className="gallery-container">
-      <div className="grid auto-rows-32 gap-x-4 gap-y-20 md:grid-cols-4">
-      {imageArray.map((image, index) => {
-        return(
-          <div className={thisImageisShowing === image.id? "fixed top-10 left-1/2 transform -translate-x-1/2 z-10 " : ""}>
-            <img 
-            onClick={()=> {
-              setTheShowingImage(image.id)
-              setCurrentImageIndex(index)
-            }}
-            className={thisImageisShowing === image.id? " object-cover ": baseImageStyle}
-            src={image.src} alt={image.alt}/>
-            {thisImageisShowing === image.id &&
-            <div>
-             <IoCloseOutline
-             onClick={() => setTheShowingImage(null)}
-              className="absolute cursor-pointer right-3 h-12 w-12 top-3 text-white hover:text-primary-dark"/>
-              <RxCaretLeft
-    onClick={() => {
+  const dispatch = useAppDispatch()
+  const imageModalState = useTypedSelector((state) => state.gallery.enlargeModalState)
+
+  // allow users to use left and right keys to change images
+  function handleKeyDown(event: KeyboardEvent){
+    if(thisImageisShowing){
+      if(event.key === "ArrowLeft"){
         const prevIndex = (currentImageIndex - 1 + imageArray.length) % imageArray.length;
         setCurrentImageIndex(prevIndex);
         setTheShowingImage(imageArray[prevIndex].id);
-    }}
-    className="absolute cursor-pointer left-3 top-1/2 -translate-y-1/2 text-white hover:text-primary-dark h-12 w-12"
-/>
-
-<RxCaretRight
-    onClick={() => {
+      }
+      if(event.key === "ArrowRight"){
         const nextIndex = (currentImageIndex + 1) % imageArray.length;
         setCurrentImageIndex(nextIndex);
         setTheShowingImage(imageArray[nextIndex].id);
-    }}
-    className="absolute cursor-pointer right-3 top-1/2 -translate-y-1/2 text-white hover:text-primary-dark h-12 w-12"
-/>
-                </div>}
-          </div>
+      }
+    }
+  }
+
+  useEffect(() =>{
+    if(!imageModalState){
+      setTheShowingImage(null);
+      setCurrentImageIndex(0)
+    }
+
+      document.addEventListener("keydown", handleKeyDown)
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown)
+    }
+  }, [thisImageisShowing, currentImageIndex, imageModalState])
+
+  return (
+    <div className="gallery-container mb-5">
+      
+      <div className="addMore mb-3 mt-2 rounded-full p-2 w-fit bg-secondary-dark hover:bg-secondary-light">
+    <MdOutlineAddAPhoto className="h-12 w-12 text-slate-200 cursor-pointer"/>
+      </div>
+      <div className="grid auto-rows-32 gap-x-4 gap-y-20 grid-cols-3 md:grid-cols-4">
+      {imageArray.map((image, index) => {
+        return(
+          <div className={thisImageisShowing === image.id? "fixed top-10 left-1/2 transform mb-4 -translate-x-1/2 z-10 " : ""}>
+            <img 
+            onClick={(event)=> {
+              event.stopPropagation();
+             dispatch(enlargeModalOpen())
+             setTheShowingImage(image.id)
+             setCurrentImageIndex(index)
+             
+            }}
+            className={thisImageisShowing === image.id? "object-cover": baseImageStyle}
+            src={image.src} alt={image.alt}/>
+            {thisImageisShowing === image.id &&
+            <div>
+        <IoCloseOutline
+          onClick={() => setTheShowingImage(null)}
+          className="absolute cursor-pointer right-3 h-12 w-12 top-3 text-white hover:text-primary-dark"/>
+        <RxCaretLeft
+          onClick={(event) => {
+          const prevIndex = (currentImageIndex - 1 + imageArray.length) % imageArray.length;
+          setCurrentImageIndex(prevIndex);
+          setTheShowingImage(imageArray[prevIndex].id);
+          event.stopPropagation();
+          }}
+          className="absolute cursor-pointer left-3 top-1/2 -translate-y-1/2 text-white hover:text-primary-dark h-12 w-12"
+        />
+        <RxCaretRight
+          onClick={(event) => {
+          const nextIndex = (currentImageIndex + 1) % imageArray.length;
+          setCurrentImageIndex(nextIndex);
+          setTheShowingImage(imageArray[nextIndex].id);
+          event.stopPropagation();
+          }}
+          className="absolute cursor-pointer right-3 top-1/2 -translate-y-1/2 text-white hover:text-primary-dark h-12 w-12"
+        />
+        </div>}
+        </div>
         )
       })}
       </div>
-      <p className="rounded-md bg-primary-dark hover:bg-primary-light p-2 font-atma text-white h-12 w-32 text-center">Load More...</p>
+      {imageModalState && (
+                <div className="fixed inset-0 z-[9] opacity-60 bg-black"></div>
+            )}
     </div>
   )
 }
