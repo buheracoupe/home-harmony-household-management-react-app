@@ -1,5 +1,8 @@
 import { nanoid } from "nanoid"
 import { useState } from "react"
+import { IoCloseOutline } from "react-icons/io5";
+import { RxCaretLeft } from "react-icons/rx";
+import { RxCaretRight } from "react-icons/rx";
 
 
  export const imageArray = [
@@ -20,15 +23,44 @@ const baseImageStyle:string = "rounded-md transition-all duration-300 h-64 w-ful
 function Gallery() {
 
   const [thisImageisShowing, setTheShowingImage] = useState<string | null>(null)
+  const [currentImageIndex, setCurrentImageIndex] = useState<number>(0)
   return (
     <div className="gallery-container">
       <div className="grid auto-rows-32 gap-x-4 gap-y-20 md:grid-cols-4">
-      {imageArray.map((image) => {
+      {imageArray.map((image, index) => {
         return(
+          <div className={thisImageisShowing === image.id? "fixed top-10 left-1/2 transform -translate-x-1/2 z-10 " : ""}>
             <img 
-            onClick={()=> setTheShowingImage(image.id)}
-            className={thisImageisShowing === image.id? "fixed object-cover top-1/2 left-1/2 transform -translate-x-1/2 h-[60%] z-10 -translate-y-1/2": baseImageStyle}
+            onClick={()=> {
+              setTheShowingImage(image.id)
+              setCurrentImageIndex(index)
+            }}
+            className={thisImageisShowing === image.id? " object-cover ": baseImageStyle}
             src={image.src} alt={image.alt}/>
+            {thisImageisShowing === image.id &&
+            <div>
+             <IoCloseOutline
+             onClick={() => setTheShowingImage(null)}
+              className="absolute cursor-pointer right-3 h-12 w-12 top-3 text-white hover:text-primary-dark"/>
+              <RxCaretLeft
+    onClick={() => {
+        const prevIndex = (currentImageIndex - 1 + imageArray.length) % imageArray.length;
+        setCurrentImageIndex(prevIndex);
+        setTheShowingImage(imageArray[prevIndex].id);
+    }}
+    className="absolute cursor-pointer left-3 top-1/2 -translate-y-1/2 text-white hover:text-primary-dark h-12 w-12"
+/>
+
+<RxCaretRight
+    onClick={() => {
+        const nextIndex = (currentImageIndex + 1) % imageArray.length;
+        setCurrentImageIndex(nextIndex);
+        setTheShowingImage(imageArray[nextIndex].id);
+    }}
+    className="absolute cursor-pointer right-3 top-1/2 -translate-y-1/2 text-white hover:text-primary-dark h-12 w-12"
+/>
+                </div>}
+          </div>
         )
       })}
       </div>

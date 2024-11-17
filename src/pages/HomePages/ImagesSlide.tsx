@@ -4,6 +4,7 @@ import { NavLink } from 'react-router-dom';
 import { imageArray } from '../Gallery';
 
 
+
 function displaySlideShow(): {id: string, image: JSX.Element}{
     const randomImage = imageArray[Math.floor(Math.random()*imageArray.length)]
     return (
