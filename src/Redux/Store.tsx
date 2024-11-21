@@ -2,12 +2,16 @@ import { configureStore } from "@reduxjs/toolkit";
 import NavReducer from "./NavSlice"
 import communicationHubReducer from "./CommunicationHubSlice"
 import gallerySliceReducer from "./GallerySlice"
+import familyBudgetReducer from "./FamilyBudgetSlice"
+import pantryReducer from "./PantrySlice"
 
 const store = configureStore({
     reducer: {
         navigation: NavReducer,
         communicationHub: communicationHubReducer,
         gallery: gallerySliceReducer,
+        FamilyBudget: familyBudgetReducer,
+        pantry: pantryReducer
     }
 })
 

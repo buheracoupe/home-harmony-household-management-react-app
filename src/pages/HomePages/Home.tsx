@@ -4,9 +4,11 @@ import FamilyBudget from './FamilyBudget'
 
 function Home() {
   return (
-    <div className='home-container grid grid-cols-3 grid-rows-2'>
+    <div className='home-container overflow-y-hidden p-2 flex gap-3'>
+      <div>
       <NotificationCenter />
       <ImagesSlide/>
+      </div>
       <FamilyBudget />
     </div>
   )

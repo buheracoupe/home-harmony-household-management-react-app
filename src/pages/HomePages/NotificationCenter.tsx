@@ -54,8 +54,11 @@ const priorityDisplay = {
 
 
     return (
-      <div className="home-container">
-        <div className="notification-center after:bg-white after:absolute after:h-full after:w-full after:top-0 after:left-0 after:z-0 after:opacity-70 relative text-secondary-dark min-h-[200px] p-2 rounded-md m-4 w-[400px] bg-gradient-to-br from-primary-dark to-secondary-light">
+      <div className="home-container col-start-1">
+        <div
+         className="notification-center after:bg-white after:absolute after:h-full after:w-full after:top-0 after:left-0 after:z-0
+          after:opacity-70 relative text-secondary-dark min-h-[200px] p-2 rounded-md m-4 w-[400px] bg-gradient-to-br
+           from-primary-dark to-secondary-light">
             <div className='z-10 relative'>
             <div className="header flex gap-2 items-center">
             <img className='object-contain h-12 p-1 bg-secondary-light rounded-full' src={alertSVG} alt="alert and clock icon" />

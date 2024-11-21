@@ -31,9 +31,10 @@ useEffect(() => {
 
 
   return (
-      <div className="slide-container p-2 border-2 flex flex-col items-center ml-4 gap-2 border-primary-light rounded-md w-[500px]">
-        <p className='font-atma text-black text-xl mx-auto'>Lately...</p>
-    <div className="slide-container overflow-hidden mx-auto relative w-[400px] h-[300px] rounded-md">
+      <div className="slide-container bg-secondary-dark col-start-1 p-2 border-2 flex flex-col items-center
+       ml-4 gap-2 border-primary-light rounded-md w-[450px]">
+        <p className='font-atma text-white text-2xl mx-auto'>Lately, in our Family...</p>
+    <div className="slide-container overflow-hidden mx-auto relative w-[350px] h-[250px] rounded-md">
         <AnimatePresence mode='wait'>
         <motion.div
         initial={{ opacity: 0, x:-100 }}
@@ -51,7 +52,7 @@ useEffect(() => {
         </div> */}
     </div>
     <NavLink to="/gallery">
-    <button className='p-2 rounded-md bg-primary-dark hover:bg-primary-light font-atma text-white'>See More</button>
+    <button className='p-2 rounded-md bg-yellow-500 hover:bg-primary-light font-atma text-white'>See More</button>
     </NavLink>
     </div>
   )

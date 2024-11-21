@@ -5,6 +5,7 @@ import { useAppDispatch, useTypedSelector } from "./Redux/ReduxHooks"
 import { closeMobileNav } from "./Redux/NavSlice"
 import { closeNotificationModal } from "./Redux/CommunicationHubSlice"
 import { enlargeModalClosed } from "./Redux/GallerySlice"
+import { changeBudgetFormState } from "./Redux/FamilyBudgetSlice"
 
 
 
@@ -14,14 +15,18 @@ const dispatch = useAppDispatch();
 const mobileNavState = useTypedSelector((state) => state.navigation.mobileNavState)
 const notificationModalState = useTypedSelector((state) => state.communicationHub.notificationModalState)
 const enlargeModalState = useTypedSelector((state) => state.gallery.enlargeModalState)
+const budgetFormState = useTypedSelector((state) => state.FamilyBudget.budgetFormShowing)
+
   return (
     <BrowserRouter>
     <div
+  // outside click modal handlers and togglers
     onClick={
       () =>{
        if(mobileNavState){dispatch(closeMobileNav())}
        if(notificationModalState){dispatch(closeNotificationModal())}
        if(enlargeModalState){dispatch(enlargeModalClosed())}
+       if(budgetFormState){dispatch(changeBudgetFormState(false))}
       }
       }
      className="app flex relative flex-col min-h-screen">

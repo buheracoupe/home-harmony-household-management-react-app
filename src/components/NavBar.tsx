@@ -26,7 +26,7 @@ function NavBar() {
         <MotionNavLink
          variants={variants}
         whileHover="hover"
-         to="/pantryplanner">Pantry Planner</MotionNavLink>
+         to="/pantry-planner">Pantry Planner</MotionNavLink>
         <MotionNavLink
          variants={variants}
         whileHover="hover"

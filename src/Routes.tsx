@@ -1,5 +1,5 @@
 import React from 'react'
-import PantryPlanner from "./pages/PantryPlanner"
+import PantryPlanner from "./pages/Pantry Planner/PantryPlanner"
 import Home from "./pages/HomePages/Home"
 import Events from "./pages/Events"
 import Gallery from './pages/Gallery'
