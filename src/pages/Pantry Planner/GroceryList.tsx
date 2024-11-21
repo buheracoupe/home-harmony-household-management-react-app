@@ -7,6 +7,7 @@ import { CiEdit } from "react-icons/ci";
 import { useForm, Controller } from "react-hook-form"
 import { addGroceryItem, deleteGroceryItem, allowEditing, stopEditing, updateItem } from "../../Redux/PantrySlice"
 import { FaCheck } from "react-icons/fa6";
+import { useState } from "react";
 
 interface groceryItem {
     id: string
@@ -22,6 +23,7 @@ function GroceryList(){
 
 const {register, watch} = useForm()
 const groceryList = useTypedSelector((state) => state.pantry.GroceryList)
+const [shownListItems, setShownListItems] = useState(3)
 const dispatch = useAppDispatch()
 
 
@@ -37,7 +39,7 @@ const dispatch = useAppDispatch()
         </div>
        <GroceryForm/>
         <div className="w-full flex flex-col gap-2 items-center">
-        {groceryList.map((item) => {
+        {groceryList.slice( 0, shownListItems ).map((item) => {
             // watch checkboxes individually and update accordingly
             const isChecked = watch(item.id, false)
 
@@ -73,9 +75,15 @@ const dispatch = useAppDispatch()
             )
         })}
         </div>
+        <div
+         onClick={()=>{
+            setShownListItems((prevState) => prevState + 3)
+        }}
+         className={groceryList.length < shownListItems? "hidden" : "flex items-center cursor-pointer gap-2"}>
         <BiPlus 
-        onClick={()=>{}}
         className="rounded-full bg-secondary justify-self-end hover:bg-secondary-light text-3xl cursor-pointer transition-all duration-300 "/>
+        <p className="font-atma">See More</p>
+        </div>
      </div>
     )
   }
