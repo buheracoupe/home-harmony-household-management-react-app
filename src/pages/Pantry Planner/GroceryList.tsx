@@ -1,5 +1,4 @@
 import { BiPlus } from "react-icons/bi"
-import useComponentVisible from "../../hooks/useComponentVisible"
 import shoppingIcon from "../../assets/cart-shopping-list-svgrepo-com.svg"
 import { nanoid } from "nanoid"
 import { useTypedSelector, useAppDispatch } from "../../Redux/ReduxHooks"
@@ -8,7 +7,6 @@ import { CiEdit } from "react-icons/ci";
 import { useForm, Controller } from "react-hook-form"
 import { addGroceryItem, deleteGroceryItem, allowEditing, stopEditing, updateItem } from "../../Redux/PantrySlice"
 import { FaCheck } from "react-icons/fa6";
-import { useState } from "react"
 
 interface groceryItem {
     id: string
@@ -19,29 +17,16 @@ interface groceryItem {
 
 
 
+
 function GroceryList(){
 
-const {register, handleSubmit, reset, control, watch} = useForm()
-const [ref, isComponentVisible, toggleVisiblity] = useComponentVisible(false)
+const {register, watch} = useForm()
 const groceryList = useTypedSelector((state) => state.pantry.GroceryList)
 const dispatch = useAppDispatch()
-const[updateValue, setUpdateValue] = useState()
 
 
 
 
-function onSubmit(data){
-const groceryItem = {
-    id: nanoid(),
-    groceryItem: data.groceryItem,
-    isEditing: false
-}
-
-
-
-dispatch(addGroceryItem(groceryItem))
-reset()
-}
 
   
     return(
@@ -50,15 +35,7 @@ reset()
             <p className="font-atma text-3xl text-center">Grocery List</p>
             <img className="h-12" src={shoppingIcon} alt="shopping cart icon" />
         </div>
-        <form
-        onSubmit={handleSubmit(onSubmit)}
-         className="flex">
-            <input
-            {...register("groceryItem", {required: "Please add item to submit!"})}
-            className="text-black p-2 hover:cursor-pointer focus:outline-primary-light"
-             type="text" />
-             <button className="bg-secondary rounded-r-lg p-2 hover:bg-secondary-light" type="submit">Add Item</button>
-        </form>
+       <GroceryForm/>
         <div className="w-full flex flex-col gap-2 items-center">
         {groceryList.map((item) => {
             // watch checkboxes individually and update accordingly
@@ -105,8 +82,59 @@ reset()
 
   export default GroceryList
 
+
+interface GroceryFormType{
+    groceryItem: string
+}
+
+// groceryForm to add items
+export function GroceryForm(){
+const   {handleSubmit, reset, register} = useForm();
+const dispatch = useAppDispatch()
+
+// assert type in the function body
+function onSubmit(data: unknown){
+const typedData = data as GroceryFormType
+
+const groceryItem = {
+    id: nanoid(),
+    groceryItem: typedData.groceryItem,
+    isEditing: false
+}
+
+dispatch(addGroceryItem(groceryItem))
+reset()
+}
+
+
+return(
+    <form
+    onSubmit={handleSubmit(onSubmit)}
+     className="flex">
+        <input
+        {...register("groceryItem", {required: "Please add item to submit!"})}
+        className="text-black p-2 hover:cursor-pointer focus:outline-primary-light"
+         type="text" />
+         <button className="bg-secondary rounded-r-lg p-2 hover:bg-secondary-light" type="submit">Add Item</button>
+    </form>
+)
+}
+
+
+
+
+
+
+
+
+
+// edit groceryList Item component and Logic
    interface GroceryItemEditorProps {
     item:groceryItem
+   }
+
+   interface GroceryItemEditorForm{
+    groceryItem: string
    }
 
 
@@ -116,7 +144,7 @@ const {control, handleSubmit} = useForm({defaultValues: {groceryItem: item.groce
 const dispatch = useAppDispatch()
 
 
-function handleUpdate(data){
+function handleUpdate(data: GroceryItemEditorForm){
     console.log(data)
     dispatch(stopEditing(item.id))
     dispatch(updateItem({id: item.id, update: data.groceryItem}))

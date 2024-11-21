@@ -1,6 +1,29 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 
+const initialGroceryList = [
+    {
+        id: '1',
+        groceryItem: 'Organic Avocados',
+        isEditing: false,
+    },
+    {
+        id: '2',
+        groceryItem: 'Whole Grain Bread',
+        isEditing: false,
+    },
+    {
+        id: '3',
+        groceryItem: 'Almond Milk (Unsweetened)',
+        isEditing: false,
+    },
+    {
+        id: '4',
+        groceryItem: 'Dark Chocolate (70% Cocoa)',
+        isEditing: false,
+    },
+];
+
 interface groceryItem {
     id: string
     groceryItem:string
@@ -9,7 +32,7 @@ interface groceryItem {
 
 const initialState = {
 isAddGroceryOpen: false,
-GroceryList: [] as groceryItem[]
+GroceryList: initialGroceryList as groceryItem[]
 }
 
 const PantrySlice = createSlice({
