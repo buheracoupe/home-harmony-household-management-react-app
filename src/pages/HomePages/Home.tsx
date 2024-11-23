@@ -2,6 +2,7 @@ import NotificationCenter from './NotificationCenter'
 import ImagesSlide from './ImagesSlide'
 import FamilyBudget from './FamilyBudget'
 import GroceryDisplay from './GroceryDisplay'
+import EventsDisplay from './EventsDisplay'
 
 function Home() {
   return (
@@ -11,8 +12,9 @@ function Home() {
       <ImagesSlide/>
       </div>
       <FamilyBudget />
-      <div className='col3 mt-4 w-full'>
+      <div className='flex flex-col gap-3 justify-start mt-4 w-full'>
       <GroceryDisplay/>
+      <EventsDisplay />
       </div>
     </div>
   )

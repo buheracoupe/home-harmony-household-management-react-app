@@ -5,6 +5,7 @@ import gallerySliceReducer from "./GallerySlice"
 import familyBudgetReducer from "./FamilyBudgetSlice"
 import pantryReducer from "./PantrySlice"
 import mealPlannerReducer from "./MealPlannerSlice"
+import eventsReducer from "./EventsSlice"
 
 const store = configureStore({
     reducer: {
@@ -13,7 +14,8 @@ const store = configureStore({
         gallery: gallerySliceReducer,
         FamilyBudget: familyBudgetReducer,
         pantry: pantryReducer,
-        mealPlanner: mealPlannerReducer
+        mealPlanner: mealPlannerReducer,
+        events: eventsReducer
     }
 })
 

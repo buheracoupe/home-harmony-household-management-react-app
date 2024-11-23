@@ -9,10 +9,22 @@ import { FileUpload } from 'primereact/fileupload';
 import 'primereact/resources/themes/saga-blue/theme.css';
 import 'primereact/resources/primereact.min.css';
 import 'primeicons/primeicons.css'; 
+import { useAppDispatch } from "../../../Redux/ReduxHooks"
+import { addEvent } from "../../../Redux/EventsSlice"
+
+
+interface FormData{
+    date: Date;
+    description: string;
+    eventType: {value: string, label:string};
+    location: string;
+    title:string;
+    uploadFiles:string;
+}
 
 
 const typeOptions = [
-    {value: "family gathering", label: "Family Gathering"},
+    {value: "Family Gathering", label: "Family Gathering"},
     {value:"Outdoor Activities", label: "Outdoor Activities"},
     {value:"Community Service", label: "Community Service"},
     {value:"Barbecue/Cookout", label: "Barbecue/Cookout"},
@@ -22,11 +34,21 @@ const typeOptions = [
 
 
 function EventsForm() {
-    const {register, handleSubmit, control, reset, formState:{errors}} = useForm()
+    const {register, handleSubmit, control, reset, formState:{errors}} = useForm<FormData>()
+    const dispatch = useAppDispatch()
 
-    function onSubmit(data){
+    function onSubmit(data: FormData){
         console.log(data)
         reset()
+        const event = {
+            date:data.date,
+            description: data.description,
+            eventType: data.eventType.value,
+            location: data.location,
+            title: data.title
+        }
+
+        dispatch(addEvent(event))
     }
 
   return (
