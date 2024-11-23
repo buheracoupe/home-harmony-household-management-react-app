@@ -4,6 +4,7 @@ import communicationHubReducer from "./CommunicationHubSlice"
 import gallerySliceReducer from "./GallerySlice"
 import familyBudgetReducer from "./FamilyBudgetSlice"
 import pantryReducer from "./PantrySlice"
+import mealPlannerReducer from "./MealPlannerSlice"
 
 const store = configureStore({
     reducer: {
@@ -11,7 +12,8 @@ const store = configureStore({
         communicationHub: communicationHubReducer,
         gallery: gallerySliceReducer,
         FamilyBudget: familyBudgetReducer,
-        pantry: pantryReducer
+        pantry: pantryReducer,
+        mealPlanner: mealPlannerReducer
     }
 })
 

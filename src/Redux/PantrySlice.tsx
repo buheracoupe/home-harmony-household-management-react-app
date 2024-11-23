@@ -32,7 +32,8 @@ interface groceryItem {
 
 const initialState = {
 isAddGroceryOpen: false,
-GroceryList: initialGroceryList as groceryItem[]
+GroceryList: initialGroceryList as groceryItem[],
+customData: []
 }
 
 const PantrySlice = createSlice({

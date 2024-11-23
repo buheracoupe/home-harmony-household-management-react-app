@@ -1,7 +1,7 @@
 import React from 'react'
 import PantryPlanner from "./pages/Pantry Planner/PantryPlanner"
 import Home from "./pages/HomePages/Home"
-import Events from "./pages/Events"
+import Events from "./pages/HomePages/Events Pages/Events"
 import Gallery from './pages/Gallery'
 import CommunicationHub from "./pages/CommunicationHub"
 import { AnimatePresence, motion } from 'framer-motion'

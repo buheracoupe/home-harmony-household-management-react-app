@@ -59,7 +59,7 @@ function FamilyBudget() {
     }, [])
 
   return (
-    <div className='familybudget w-[33rem] pt-3 relative'>
+    <div className='familybudget w-full pt-3 relative'>
             <BsPlusLg
             onClick={()=> dispatch(changeBudgetFormState(true)) }
              className="text-yellow-200 transition duration-300 hover:text-yellow-600 absolute top-4 right-3 cursor-pointer text-3xl"/>
