@@ -71,7 +71,7 @@ useEffect(() => {
             <p className="font-abel font-semibold text-lg">{displayEvent.title}</p> 
             {displayEvent.title !==  "loading events...." &&
                 (<div className="flex flex-col gap-2 items-start font-quicksand">
-                    <p>{displayEvent.date?.dateString} at {displayEvent.date?.timeString}</p>
+                    <p>{displayEvent.date?.dateString} at <span className="font-semibold">{displayEvent.date?.timeString}</span></p>
                     <p className="font-atma text-lg">{displayEvent.eventType}</p>
             </div>)}
             </motion.div>

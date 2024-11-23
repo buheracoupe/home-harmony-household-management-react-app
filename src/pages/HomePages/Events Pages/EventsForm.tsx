@@ -11,7 +11,7 @@ import 'primereact/resources/primereact.min.css';
 import 'primeicons/primeicons.css'; 
 import { useAppDispatch } from "../../../Redux/ReduxHooks"
 import { addEvent } from "../../../Redux/EventsSlice"
-
+import { nanoid } from "nanoid"
 
 interface FormData{
     date: Date;
@@ -41,6 +41,7 @@ function EventsForm() {
         console.log(data)
         reset()
         const event = {
+            id: nanoid(),
             date:data.date,
             description: data.description,
             eventType: data.eventType.value,
