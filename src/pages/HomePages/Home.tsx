@@ -3,6 +3,7 @@ import ImagesSlide from './ImagesSlide'
 import FamilyBudget from './FamilyBudget'
 import GroceryDisplay from './GroceryDisplay'
 import EventsDisplay from './EventsDisplay'
+import SuggestedMealsSlide from './SuggestedMealsSlide'
 
 function Home() {
   return (
@@ -15,6 +16,7 @@ function Home() {
       <div className='flex flex-col gap-3 justify-start mt-4 w-full'>
       <GroceryDisplay/>
       <EventsDisplay />
+      <SuggestedMealsSlide/>
       </div>
     </div>
   )

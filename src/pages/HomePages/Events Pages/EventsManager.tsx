@@ -16,7 +16,7 @@ function EventsManager() {
         return {
             ...eventItem, showMore: false
         }
-    })
+    }).sort((a,b) => a.date.getTime() - b.date.getTime())
     const [events, setEvents] = useState(modifiedEventsCollection)
 
 
