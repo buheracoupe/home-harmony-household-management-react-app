@@ -6,6 +6,12 @@ import { closeMobileNav } from "./Redux/NavSlice"
 import { closeNotificationModal } from "./Redux/CommunicationHubSlice"
 import { enlargeModalClosed } from "./Redux/GallerySlice"
 import { changeBudgetFormState } from "./Redux/FamilyBudgetSlice"
+import { closeEventsModifier } from "./Redux/EventsSlice"
+import '@mantine/core/styles.css';
+import '@mantine/dates/styles.css';
+import { MantineProvider } from "@mantine/core"
+import { fetchMealData } from "./Redux/MealPlannerSlice"
+import { closeSuggestedMeals } from "./Redux/MealPlannerSlice"
 
 
 
@@ -16,9 +22,13 @@ const mobileNavState = useTypedSelector((state) => state.navigation.mobileNavSta
 const notificationModalState = useTypedSelector((state) => state.communicationHub.notificationModalState)
 const enlargeModalState = useTypedSelector((state) => state.gallery.enlargeModalState)
 const budgetFormState = useTypedSelector((state) => state.FamilyBudget.budgetFormShowing)
+const eventsModifierState = useTypedSelector((state) => state.events.eventsModifier)
+const customData = useTypedSelector((state) => state.mealPlanner.customData)
+const suggestedMealsDisplayState = useTypedSelector((state) => state.mealPlanner.isSuggestedMealsDisplayOpen)
 
   return (
     <BrowserRouter>
+    <MantineProvider>
     <div
   // outside click modal handlers and togglers
     onClick={
@@ -27,6 +37,16 @@ const budgetFormState = useTypedSelector((state) => state.FamilyBudget.budgetFor
        if(notificationModalState){dispatch(closeNotificationModal())}
        if(enlargeModalState){dispatch(enlargeModalClosed())}
        if(budgetFormState){dispatch(changeBudgetFormState(false))}
+       if(eventsModifierState){dispatch(closeEventsModifier())}
+       if(suggestedMealsDisplayState){dispatch(closeSuggestedMeals())}
+
+       if(customData.find((meal) => meal.isSuggesting === true)){
+
+         const suggestionsClosedData = customData.map((meal) =>{
+          return({...meal, isSuggesting: false})
+         })
+         dispatch(fetchMealData(suggestionsClosedData))
+       }
       }
       }
      className="app flex relative flex-col min-h-screen">
@@ -34,6 +54,7 @@ const budgetFormState = useTypedSelector((state) => state.FamilyBudget.budgetFor
       <NavBar />
       <AnimatedRoutes />
     </div>
+    </MantineProvider>
     </BrowserRouter>
   )
 }

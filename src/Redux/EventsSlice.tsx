@@ -69,7 +69,8 @@ const eventsSample: Event[] = [
 ];
 
 const initialState = {
-eventsCollection: eventsSample as Event[]
+eventsCollection: eventsSample as Event[],
+eventsModifier: false,
 }
 
 const eventsSlice = createSlice({
@@ -78,10 +79,22 @@ const eventsSlice = createSlice({
     reducers: {
         addEvent:(state, action: PayloadAction<Event>) => {
             state.eventsCollection.push(action.payload)
+        },
+        deleteEvent:(state, action) => {
+         const eventToDeleteIndex = state.eventsCollection.findIndex((eventItem) => {
+             return eventItem.id === action.payload
+            })
+        state.eventsCollection.splice(eventToDeleteIndex, 1)
+        },
+        openEventsModifer:(state) => {
+            state.eventsModifier = true
+        },
+        closeEventsModifier: (state) => {
+            state.eventsModifier = false
         }
     }
 
 })
 
-export const {addEvent} = eventsSlice.actions
+export const {addEvent, deleteEvent, openEventsModifer, closeEventsModifier} = eventsSlice.actions
 export default eventsSlice.reducer

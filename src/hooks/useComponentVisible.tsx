@@ -20,9 +20,9 @@ function useComponentVisible(initialState = false): useComponentVisibleReturnTyp
 
 
     useEffect(() => {
-        document.addEventListener("click", handleClick)
+        window.addEventListener("click", handleClick)
 
-        return () => document.removeEventListener("click", handleClick)
+        return () => window.removeEventListener("click", handleClick)
     }, [])
 
 

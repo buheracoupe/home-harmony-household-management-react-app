@@ -1,11 +1,18 @@
 import axios from "axios"
 import { useEffect, useState } from "react"
-import { useForm } from "react-hook-form"
+import { useForm, Controller } from "react-hook-form"
 import { ErrorMessage } from "@hookform/error-message"
 import chefIcon from "../../assets/meal-svgrepo-com.svg"
 import mealSuggestionIcon from "../../assets/cereal-meal-svgrepo-com.svg"
 import { useTypedSelector, useAppDispatch } from "../../Redux/ReduxHooks"
-import { fetchMealData } from "../../Redux/MealPlannerSlice"
+import { fetchMealData, isSuggestingFalse, isSuggestingTrue, addSuggestedMeal, openSuggestedMeals } from "../../Redux/MealPlannerSlice"
+import { DatePickerInput } from '@mantine/dates'
+import '@mantine/core/styles.css';
+import { CiCalendarDate } from "react-icons/ci";
+import { Select } from '@mantine/core';
+import { IoMdClose } from "react-icons/io";
+import { nanoid } from "nanoid"
+import SuggestedMealsDisplay from "./SuggestedMealsForm"
 
 interface ResponseData{
     id:number;
@@ -33,6 +40,7 @@ const {reset, handleSubmit, formState: {errors}, register} = useForm<FormData>()
 const apiKey = "5d42170465ed463790bc3be7f86e5f93"
 const dispatch = useAppDispatch()
 const customData = useTypedSelector((state) => state.mealPlanner.customData)
+const suggestedMealsDisplayState = useTypedSelector((state) => state.mealPlanner.isSuggestedMealsDisplayOpen)
 
 
 
@@ -66,8 +74,16 @@ function onSubmit(data:FormData){
 
 
   return (
-    <div className="w-full min-h-full flex flex-col items-center rounded-md p-2 bg-gradient-to-br from-primary-dark
+    <div className="w-full relative min-h-full flex flex-col items-center rounded-md p-2 bg-gradient-to-br from-primary-dark
      to-secondary-dark  text-white">
+    <p 
+    onClick={() => dispatch(openSuggestedMeals())}
+    className="absolute top-4 right-4 font-atma text-xl hover:transform hover:scale-110 cursor-pointer hover:text-yellow-500
+     transition-all duration-300">See Suggested Meals</p>
+     <div>
+     {suggestedMealsDisplayState &&<div className="overlay fixed transition-all duration-300 inset-0 bg-black opacity-80 z-40"></div>}
+     <SuggestedMealsDisplay/>
+     </div>
     <div className="flex items-center mb-4">
         <p className="font-atma text-2xl">Meal Planner</p>
         <img 
@@ -91,10 +107,11 @@ function onSubmit(data:FormData){
     />
     </form>
     <div className="display-meals mt-3 grid grid-cols-5 gap-3">
-    {customData.length < 1? <p className="text-4xl font-abel">No recipes were found</p>:
+    {customData.length < 1? <p className="text-4xl text-center font-abel">No recipes were found</p>:
     customData.map((recipe) => {
 
         return(
+            <>
             <div className=" bg-white relative h-[250px] group hover:bg-gradient-to-br text-secondary-dark transition-all
              duration-300 hover:from-primary-dark hover:to-yellow-500 hover:text-white rounded-md flex flex-col
               gap-2 items-center p-2">
@@ -103,12 +120,16 @@ function onSubmit(data:FormData){
                  src={recipe.image} alt="picture of the recipe" />
                 <p className=" hover:text-white text-lg font-atma">{recipe.title}</p>
                 <button
-                onClick={() => recipe.isSuggesting = true}
+                onClick={() => {
+                    dispatch(isSuggestingTrue(recipe.id))
+                    console.log(recipe.isSuggesting)
+                }}
                  className="rounded-md text-black font-quicksand text-sm p-2 bg-yellow-500 group-hover:bg-secondary-dark group-hover:text-white
                  transition-all absolute bottom-2 left-1/2 -translate-x-1/2 duration-300">Suggest Meal</button>
              {recipe.isSuggesting && <SuggestionModal recipe={recipe} />}
-             {recipe.isSuggesting && <div className="overlay fixed bg-black opacity-30 inset-0 z-5"></div>}
             </div>
+             {recipe.isSuggesting && <div className="overlay fixed bg-black opacity-80 inset-0 z-50"></div>}
+             </>
         )
     })}
     </div>
@@ -118,24 +139,98 @@ function onSubmit(data:FormData){
 
 export default MealPlanner
 
+interface SuggestionFormData{
+    id: string
+    datePicker: Date;
+    suggestedBy: string;
+    timeSelector: string
+    mealTitle: string;
+}
+
 
 export function SuggestionModal({recipe}:{recipe:CustomData}){
 
+    const { control, handleSubmit, register, reset } =useForm<SuggestionFormData>()
+    const dispatch = useAppDispatch()
+
+    function onSubmit(data: SuggestionFormData){
+        console.log(data)
+        dispatch(isSuggestingFalse(recipe.id))
+        reset()
+        data.id = nanoid()
+        data.mealTitle = recipe.title
+       dispatch(addSuggestedMeal(data))
+    }
+
     return(
-        <form className="modal fixed top-1/2 z-50 text-black rounded-md flex flex-col items-center -translate-y-1/2 left-1/2 
-        -translate-x-1/2 w-[400px] h-[300px] bg-white">
-        <div className="flex items-center gap-2">
-        <img 
-        className="h-12"
-        src={mealSuggestionIcon} alt="meal suggestion icon" />
-        <p className="font-atma text-2xl text-primary-dark">Meal Suggestion Form</p>
-        </div>
-        <div className="flex flex-col">
-            <p>Chosen Meal</p>
-            <p className="text-gray-500">{recipe.title}</p>
-        </div>
-        <button 
-        className="text-sm p-2 text-black bg-yellow-500 hover:bg-yellow-800 hover:text-white rounded-md">Submit Suggestion</button>
+        <form
+        onSubmit={handleSubmit(onSubmit)}
+        onClick={(event) => event.stopPropagation()}
+         className="modal p-2 fixed top-1/2 z-[100] font-quicksand text-black rounded-md flex
+          flex-col items-center gap-4 -translate-y-1/2 left-1/2 
+        -translate-x-1/2 w-[500px] h-[400px] bg-white">
+            <IoMdClose 
+            onClick={() => dispatch(isSuggestingFalse(recipe.id))}
+            className="absolute top-2 right-3 text-3xl cursor-pointer text-gray-500 hover:text-primary-dark transition-all duration-300 "/>
+            <div className="flex mb-4 items-center gap-2">
+            <img 
+            className="h-12"
+            src={mealSuggestionIcon} alt="meal suggestion icon" />
+            <p className="font-atma text-2xl text-primary-dark">Meal Suggestion Form</p>
+            </div>
+            <div className="flex flex-col">
+                <p className="font-atma">Chosen Meal</p>
+                <p className="text-gray-500">{recipe.title}</p>
+            </div>
+            <div>
+            <div className="flex items-center w-full justify-between gap-5 mb-4">
+            <div className="flex flex-col items-start">
+                <Controller
+                control={control}
+                name="datePicker"
+                rules={{required: "A date for the meal is required!"}}
+                render={({field}) => (
+                    <DatePickerInput
+                    value={field.value}
+                    onChange={field.onChange}
+                    className=""
+                    minDate={new Date()}
+                    allowDeselect
+                    placeholder="Pick a date"
+                    label="Suggested Meal Date:"
+                    rightSection={<CiCalendarDate size={20} />}
+                    />
+                )}
+                />
+            </div>
+            <div className="selectTime">
+                <Controller
+                name="timeSelector"
+                control={control}
+                render={({field}) => (
+                    <Select
+                    value={field.value}
+                    onChange={field.onChange}
+                    label="Select a time for the meal"
+                    placeholder="Select time"
+                    data={['Breakfast', 'Lunch', 'Dinner', 'Random Snack']}
+                    />
+                )}
+                />
+            </div>
+            </div>
+            <div>
+                <label htmlFor="suggestedBy">Suggested By:</label>
+                <input
+                id="suggestedBy"
+                {...register("suggestedBy")}
+                className="border border-gray-500 rounded-md p-1"
+                type="text" />
+            </div>
+            </div>
+            <button 
+            className="text-sm p-2 text-black absolute bottom-3 left-1/2 -translate-x-1/2 bg-yellow-500 hover:bg-secondary
+            hover:text-white rounded-md">Submit Suggestion</button>
         </form>
     )
 
