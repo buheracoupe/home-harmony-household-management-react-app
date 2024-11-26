@@ -13,14 +13,14 @@ interface SuggestedMealToDisplay{
 const dateOptions: Intl.DateTimeFormatOptions = {weekday: "long", month: "long", day: "numeric", year:"numeric"}
 function SuggestedMealsSlide() {
     const suggestedMeals = useTypedSelector((state) => state.mealPlanner.suggestedMeals)
-    const [displayMeal, setDisplayMeal] = useState<SuggestedMealToDisplay>({})
+    const [displayMeal, setDisplayMeal] = useState<SuggestedMealToDisplay | null>(null)
 
 
     useEffect(() => {
         const intervalId = setInterval(() => {
             const mealToDisplayIndex = Math.floor(Math.random()*suggestedMeals.length)
             const mealToDisplay = suggestedMeals[mealToDisplayIndex]
-            const modifiedMealToDisplay = {...mealToDisplay, datePicker: mealToDisplay.datePicker.toLocaleDateString("en-US", dateOptions) }
+            const modifiedMealToDisplay = {...mealToDisplay, datePicker: new Date(mealToDisplay.datePicker).toLocaleDateString("en-US", dateOptions) }
             setDisplayMeal(modifiedMealToDisplay)
 
     }, 5000)
@@ -29,14 +29,14 @@ function SuggestedMealsSlide() {
     }, [suggestedMeals])
 
   return (
-    <div className="rounded-md p-1 flex flex-col items-center text-white font-quicksand bg-gradient-to-bl from-orange-500
+    <div className="rounded-md overflow-y-hidden p-1 flex flex-col items-center text-white font-quicksand bg-gradient-to-bl from-orange-500
      via-secondary-dark to-primary-dark h-28">
         <div className="top flex items-center gap-2">
             <img className="h-12" src={chickenMealIcon} alt="Chicken and Potatoes Meal" />
             <p className="font-atma text-lg">Suggested Meals</p>
         </div>
         <AnimatePresence mode="wait">
-        {Object.keys(displayMeal).length > 0 ?
+        {displayMeal ?
         <motion.div
         key={displayMeal.id}
         initial={{opacity: 0, y:-300}}

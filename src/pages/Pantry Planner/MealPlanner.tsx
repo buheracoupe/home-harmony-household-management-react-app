@@ -84,7 +84,7 @@ function onSubmit(data:FormData){
      {suggestedMealsDisplayState &&<div className="overlay fixed transition-all duration-300 inset-0 bg-black opacity-80 z-40"></div>}
      <SuggestedMealsDisplay/>
      </div>
-    <div className="flex items-center mb-4">
+    <div className="flex pt-10 items-center mb-4">
         <p className="font-atma text-2xl">Meal Planner</p>
         <img 
         className="h-20"
@@ -98,7 +98,8 @@ function onSubmit(data:FormData){
         className="text-black h-12 px-1 font-abel"
         {...register("recipes", {required: "Please enter a recipe to search!"})}
         type="text" />
-        <button className="bg-yellow-300 h-12 text-black font-atma">Search Meals</button>
+        <button className="bg-yellow-300 h-12 px-2 hover:bg-secondary hover:text-white
+         transition-all duration-300 text-black font-atma">Search Meals</button>
     </div>
     <ErrorMessage
     name="recipes"
@@ -106,13 +107,15 @@ function onSubmit(data:FormData){
     render={({message}) => (<span className="text-white text-sm font-quicksand">{message}</span>)}
     />
     </form>
-    <div className="display-meals mt-3 grid grid-cols-5 gap-3">
-    {customData.length < 1? <p className="text-4xl text-center font-abel">No recipes were found</p>:
-    customData.map((recipe) => {
+    {customData.length < 1 && <p className="text-4xl mt-8 font-abel">No recipes were found</p>}
+    <div className="display-meals mt-3 grid grid-cols-2  lg:grid-cols-3 2xl:grid-cols-5 gap-3">
+    {customData.length > 0 && customData.map((recipe) => {
 
         return(
             <>
-            <div className=" bg-white relative h-[250px] group hover:bg-gradient-to-br text-secondary-dark transition-all
+            <div
+            key={recipe.id}
+             className=" bg-white relative h-[250px] group hover:bg-gradient-to-br text-secondary-dark transition-all
              duration-300 hover:from-primary-dark hover:to-yellow-500 hover:text-white rounded-md flex flex-col
               gap-2 items-center p-2">
                 <img

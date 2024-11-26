@@ -1,31 +1,48 @@
-import calendarIcon from "../../../assets/calendar-svgrepo-com (1).svg"
-import { useTypedSelector, useAppDispatch } from "../../../Redux/ReduxHooks"
+import { useTypedSelector, useAppDispatch } from "../../Redux/ReduxHooks"
 import { PiCaretDoubleDownThin, PiCaretDoubleUpThin } from "react-icons/pi";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { motion, AnimatePresence, easeInOut } from "framer-motion";
-import settingIcon from "../../../assets/settings-svgrepo-com.svg"
+import settingIcon from "../../assets/settings-svgrepo-com.svg"
 import { IoIosRemoveCircle } from "react-icons/io";
-import { deleteEvent, openEventsModifer, closeEventsModifier } from "../../../Redux/EventsSlice";
+import { deleteEvent, openEventsModifer, closeEventsModifier, openEventsForm } from "../../Redux/EventsSlice";
+import { IoAddOutline } from "react-icons/io5";
+import EventsForm from "./EventsForm";
+import calendarIcon from "../../assets/calendar-svgrepo-com (1).svg"
 
-
+interface ModifiedEvent{
+    showMore: boolean;
+    id: string;
+    date: number;
+    description: string;
+    eventType: string;
+    location: string;
+    title: string;
+}
 function EventsManager() {
     const eventsCollection = useTypedSelector((state) => state.events.eventsCollection)
     const eventsModifierState = useTypedSelector((state) => state.events.eventsModifier)
+    const eventsFormState = useTypedSelector((state) => state.events.isEventFormOpen)
     const dispatch = useAppDispatch()
-    const modifiedEventsCollection = eventsCollection.map((eventItem) => {
-        return {
-            ...eventItem, showMore: false
-        }
-    }).sort((a,b) => a.date.getTime() - b.date.getTime())
-    const [events, setEvents] = useState(modifiedEventsCollection)
+    const [events, setEvents] = useState<ModifiedEvent[]>([])
 
 
-    function handleDateDisplay(date:Date){
+    useEffect(() => {
+        console.log(eventsCollection)
+        const modifiedEventsCollection = eventsCollection.map((eventItem) => {
+            return {
+                ...eventItem, showMore: false
+            }
+        }).sort((a,b) => a.date - b.date)
+        setEvents(modifiedEventsCollection)
+    }, [eventsCollection])
+
+
+    function handleDateDisplay(date:number){
         const dateOptions:Intl.DateTimeFormatOptions = { weekday: "long", month: "long", day: "numeric", year: "numeric"}
-        const dateString = date.toLocaleDateString("en-US", dateOptions)
+        const dateString = new Date(date).toLocaleDateString("en-US", dateOptions)
         
         const timeOptions:Intl.DateTimeFormatOptions = {hour:"numeric", minute: "numeric", hour12: true, }
-        const timeString = date.toLocaleTimeString("en-US", timeOptions)
+        const timeString = new Date(date).toLocaleTimeString("en-US", timeOptions)
     
         return {dateString, timeString}
     }
@@ -43,6 +60,14 @@ function EventsManager() {
     id="eventsManager"
      className="bg-gradient-to-br relative from-secondary-dark text-white w-[450px] 
      h-[80vh] flex flex-col items-center rounded-md p-2 via-black to-primary-light">
+        <div 
+        onClick={() => dispatch(openEventsForm())}
+        className="text-orange-700 absolute left-4 flex gap-1 cursor-pointer top-2 hover:text-yellow-600">
+            <IoAddOutline className="text-2xl"/>
+            <p className="font-atma">Add Event</p>
+        </div>
+        {eventsFormState &&<div className="eventFormOverlay fixed inset-0 bg-black opacity-90 z-30"></div>}
+        <EventsForm/>
         <p
         onClick={() => dispatch(openEventsModifer()) }
          className="font-atma hover:text-yellow-600 absolute top-2 right-4 cursor-pointer text-orange-700">Manage Events</p>

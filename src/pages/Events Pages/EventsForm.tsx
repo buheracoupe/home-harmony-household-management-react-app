@@ -1,4 +1,4 @@
-import EventsIcon from "../../../assets/event-calender-date-note-svgrepo-com.svg"
+import EventsIcon from "../../assets/event-calender-date-note-svgrepo-com.svg"
 import { useForm, Controller } from "react-hook-form"
 import Select from "react-select"
 import { ErrorMessage } from "@hookform/error-message"
@@ -9,9 +9,10 @@ import { FileUpload } from 'primereact/fileupload';
 import 'primereact/resources/themes/saga-blue/theme.css';
 import 'primereact/resources/primereact.min.css';
 import 'primeicons/primeicons.css'; 
-import { useAppDispatch } from "../../../Redux/ReduxHooks"
-import { addEvent } from "../../../Redux/EventsSlice"
+import { useAppDispatch, useTypedSelector } from "../../Redux/ReduxHooks"
+import { addEvent, closeEventsForm } from "../../Redux/EventsSlice"
 import { nanoid } from "nanoid"
+import { motion, AnimatePresence, easeInOut } from "framer-motion"
 
 interface FormData{
     date: Date;
@@ -35,6 +36,7 @@ const typeOptions = [
 
 function EventsForm() {
     const {register, handleSubmit, control, reset, formState:{errors}} = useForm<FormData>()
+    const eventsFormState = useTypedSelector((state) => state.events.isEventFormOpen)
     const dispatch = useAppDispatch()
 
     function onSubmit(data: FormData){
@@ -42,7 +44,7 @@ function EventsForm() {
         reset()
         const event = {
             id: nanoid(),
-            date:data.date,
+            date:data.date.getTime(),
             description: data.description,
             eventType: data.eventType.value,
             location: data.location,
@@ -50,19 +52,29 @@ function EventsForm() {
         }
 
         dispatch(addEvent(event))
+        dispatch(closeEventsForm())
     }
 
   return (
-    <form 
+    <AnimatePresence mode="wait">
+    {eventsFormState &&
+    <motion.form 
+    key="eventsFormToggle"
+    initial={{opacity: 0}}
+    animate={{opacity: 1}}
+    exit={{opacity:0}}
+    onClick={(event) => event.stopPropagation()}
+    transition={{duration: .3, ease: easeInOut}}
     onSubmit={handleSubmit(onSubmit)}
-    className="rounded-md flex flex-col items-center relative w-[600px] p-4 h-[75vh] font-quicksand shadow-black shadow-2xl text-black">
+    className="rounded-md flex fixed z-50 bg-white top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2  flex-col items-center w-[600px] max-md:w-auto p-4 max-md:h-[70vh] h-[75vh] font-quicksand
+     shadow-black shadow-2xl text-black">
         <div className="top flex gap-3 mb-4 items-center ">
             <img
             className="h-16"
             src={EventsIcon} alt="" />
             <p className="font-atma text-3xl">Event Form</p>
         </div>
-        <div className="FormFields grid grid-cols-2">
+        <div className="FormFields max-md:overflow-y-auto max-md:pb-14 max-md:flex max-md:flex-col max-md:gap-2 grid grid-cols-2">
         <div className="flex flex-col items-start">
         <div className="title flex items-center gap-1">
             <label htmlFor="title">Title:</label>
@@ -184,10 +196,12 @@ function EventsForm() {
              />
         </div>
         </div>
+        <button className="font-atma p-2 bg-blue-900 max-md:static transition-all duration-300 text-white rounded-md
+         hover:bg-blue-500 absolute left-1/2 bottom-3 md:-translate-x-1/2  hover:text-black">Add Event</button>
 
-        <button className="font-atma p-2 bg-blue-900 transition-all duration-300 text-white rounded-md
-         hover:bg-blue-500 absolute left-1/2 bottom-3 -translate-x-1/2  hover:text-black">Add Event</button>
-    </form>
+    </motion.form>
+    }
+    </AnimatePresence>
   )
 }
 

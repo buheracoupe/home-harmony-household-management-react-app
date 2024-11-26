@@ -10,6 +10,7 @@ import { useTypedSelector, useAppDispatch } from "../../Redux/ReduxHooks";
 import { accountForRevenue, accountForExpense, addBudgetEntry, changeBudgetFormState, changeEmojiPanState } from "../../Redux/FamilyBudgetSlice";
 import { nanoid } from "nanoid";
 import { motion, AnimatePresence, spring, easeInOut } from "framer-motion";
+import { ErrorMessage } from "@hookform/error-message";
 
 
 const monthNames = [
@@ -59,7 +60,7 @@ function FamilyBudget() {
     }, [])
 
   return (
-    <div className='familybudget w-full pt-3 relative'>
+    <div className='familybudget max-w-[700px] w-full pt-3 relative'>
             <BsPlusLg
             onClick={()=> dispatch(changeBudgetFormState(true)) }
              className="text-yellow-200 transition duration-300 hover:text-yellow-600 absolute top-4 right-3 cursor-pointer text-3xl"/>
@@ -84,7 +85,7 @@ function FamilyBudget() {
         <div className="calculationsData pt-2 flex flex-col min-h-[430px] gap-3 rounded-b-lg bg-secondary-dark">
             {budgetEntries.map((entry) => {
                 return (
-                    <div key={entry.id} className="flex font-quicksand gap-12 border-2 border-primary-light h-16 items-center 
+                    <div key={entry.id} className="flex font-quicksand gap-12 border-2 border-primary-light min-h-16 items-center 
                      px-10 rounded-md justify-between bg-white mx-auto w-[90%] ">
                     <div className="flex gap-12 items-center">
                     <p>{entry.emoji}</p>
@@ -111,9 +112,17 @@ const options = [
     {value: "Revenue", label: "Revenue"}
 ];
 
+interface BudgetFormData{
+    amount: string;
+    budgetItem: string;
+    creator: string;
+    selectedAccountingMethod: {value: string, label:string}
+}
+
+
 function BudgetForm(){
 
-const {register, handleSubmit, reset, formState: {errors}, control} = useForm()
+const {register, handleSubmit, reset, formState: {errors}, control} = useForm<BudgetFormData>()
 const [selectedEmoji, setSelectedEmoji] = useState<null | EmojiClickData>(null)
 const isEmojiPanOpen = useTypedSelector((state) => state.FamilyBudget.isEmojiPanOpen)
 const totalExpenses = useTypedSelector((state) => state.FamilyBudget.totalExpenses)
@@ -123,7 +132,7 @@ const totalRevenue = useTypedSelector((state) => state.FamilyBudget.totalExpense
 const dispatch = useAppDispatch()
 
 
-  function onSubmit(data){
+  function onSubmit(data:BudgetFormData){
 const method = data.selectedAccountingMethod.value
 // Make calculations
 const amount = parseFloat(data.amount)
@@ -206,7 +215,11 @@ if(method === "Expense"){
          {...register("budgetItem", {required: "Item is required!"})}
          className="border-2 p-2 border-primary-light rounded-md focus:outline-primary-dark"
            />
-        {errors.budgetItem && <span className="text-red-700 text-sm">{errors.budgetItem.message}</span>}
+        <ErrorMessage
+        name="budgetItem"
+        errors={errors}
+        render={({message}) => <p className="text-red-700">{message}</p>}
+        />
         </div>
         <div className="amount flex flex-col items-start">
             <label
@@ -221,8 +234,11 @@ if(method === "Expense"){
             className="border-2 p-2 border-primary-light rounded-md focus:outline-primary-dark"
             type="number" />
         </div>
-        {errors.amount && <span className="text-red-700 text-sm">{errors.amount.message}</span>}
-        </div>
+        <ErrorMessage
+        name="amount"
+        errors={errors}
+        render={({message}) => <p className="text-red-700">{message}</p>}
+        />        </div>
         </div>
         {/* select entry and created by container */}
         <div className="flex gap-10 items-center justify-center">
@@ -245,7 +261,11 @@ if(method === "Expense"){
               options={options}/>
         )}
         />
-        {errors.selectedAccountingMethod && <span className="text-red-700 text-sm">{errors.selectedAccountingMethod.message}</span>}
+        <ErrorMessage
+            name="selectedAccountingMethod"
+            errors={errors}
+            render={({message}) => <p className="text-red-700">{message}</p>}
+        />
         </div>
         <div className="creator flex flex-col items-start">
         <label
@@ -255,8 +275,11 @@ if(method === "Expense"){
         className="border-2 p-2 border-primary-light rounded-md focus:outline-primary-dark"
          type="text"
           {...register("creator", {required: "The name of the Creator is required!"})} />
-     {errors.creator && <span className="text-red-700 text-sm">{errors.creator.message}</span>}
-
+        <ErrorMessage
+            name="creator"
+            errors={errors}
+            render={({message}) => <p className="text-red-700">{message}</p>}
+        />
         </div>
         </div>
         <p

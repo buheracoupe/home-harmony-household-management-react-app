@@ -19,12 +19,12 @@ const [displayEvent, setDisplayEvent] = useState<DisplayEvent>({
     eventType: undefined
 })
 
-function handleDateDisplay(date:Date){
+function handleDateDisplay(date:number){
     const dateOptions:Intl.DateTimeFormatOptions = { weekday: "long", month: "long", day: "numeric", year: "numeric"}
-    const dateString = date.toLocaleDateString("en-US", dateOptions)
+    const dateString = new Date(date).toLocaleDateString("en-US", dateOptions)
     
     const timeOptions:Intl.DateTimeFormatOptions = {hour:"numeric", minute: "numeric", hour12: true, }
-    const timeString = date.toLocaleTimeString("en-US", timeOptions)
+    const timeString = new Date(date).toLocaleTimeString("en-US", timeOptions)
 
     return {dateString, timeString}
 }

@@ -2,18 +2,18 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 
 
-interface budgetEntry{
+interface BudgetEntry{
     id: string,
     item:string,
     emoji: string,
     amount: string;
     creator: string;
     }
-    
+
 
 const initialState = {
     totalFamilyBudget: 1000,
-    budgetEntries: [] as budgetEntry[],
+    budgetEntries: [] as BudgetEntry[],
     totalExpenses: 0,
     totalRevenue: 0,
     budgetFormShowing:false,
@@ -32,7 +32,7 @@ const FamilyBudgetSlice = createSlice({
         state.totalFamilyBudget += action.payload
         state.totalRevenue += action.payload
     },
-    addBudgetEntry: (state, action: PayloadAction<budgetEntry>) => {
+    addBudgetEntry: (state, action: PayloadAction<BudgetEntry>) => {
         state.budgetEntries.push(action.payload)
     },
     changeBudgetFormState: (state, action) => {

@@ -49,8 +49,8 @@ const dispatch = useAppDispatch()
                  key={item.id}>
                     <label htmlFor={item.id} className="flex items-center gap-12">
                         <div
-                        className={isChecked? "border w-5 h-5 rounded-md bg-primary-dark border-primary-dark flex items-center justify-center":
-                                              "border w-5 h-5 rounded-md border-primary-dark flex items-center justify-center "
+                        className={isChecked? "border min-w-5 min-h-5 rounded-md bg-primary-dark border-primary-dark flex items-center justify-center":
+                                              "border min-w-5 min-h-5 rounded-md border-primary-dark flex items-center justify-center "
                          }
                          >
                         <input

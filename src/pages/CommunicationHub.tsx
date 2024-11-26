@@ -33,12 +33,13 @@ function CommunicationHub() {
   const notificationModalState = useTypedSelector((state) => state.communicationHub.notificationModalState)
   const notifications = useTypedSelector((state) => state.communicationHub.notifications)
   return (
-    <div className="comms">
-      <div className="notification-console min-h-[300px] w-[500px] border-2 flex flex-col justify-between p-4 items-center rounded-md border-secondary-light h-auto shadow-lg text-secondary-dark font-quicksand">
+    <div className="comms min-h-[100vh] -mx-2 md:min-h-[calc(100vh-80px)] bg-gradient-to-br from-secondary-dark via-primary-dark to-yellow-500 flex items-center justify-center">
+      <div className="notification-console bg-white min-h-[300px] w-[500px] max-md:mt-20 max-md:h-[80vh] border-2 flex flex-col
+       justify-between p-4 items-center rounded-md border-secondary-light h-auto shadow-lg text-secondary-dark font-quicksand">
       <h2 className='font-atma mb-4 text-3xl'>Notification Hub</h2>
       {notifications.length === 0 ?
        <p className='text-lg text-gray-600'>No Notifications Available Just Yet...</p>
-       :<div className="notifications">
+       :<div className="notifications max-md:overflow-y-auto">
       {notifications.map((notification) => {
 
         const priorityStyles = {
@@ -48,12 +49,17 @@ function CommunicationHub() {
         };
 
         return(
-          <div key={notification.id} className="notification-item mb-4 group flex justify-between items-center gap-4">
-            <div className="priority flex items-start flex-col gap-1">
+          <div
+            key={notification.id}
+            className="notification-item mb-4 group flex justify-between items-center gap-4"
+          >
+          <div className="left flex items-center">
+            <div className="priority min-w-20 flex flex-col justify-center items-center">
               <p className='text-sm font-semibold'>Priority</p>
               <p className={priorityStyles[notification.priority]}>{notification.priority}</p>
             </div>
-            <p className=''>{notification.message}</p>
+            <p className='text-left'>{notification.message}</p>
+          </div>
             <div className="right flex gap-2 items-center">
             <p className='text-slate-400 font-abel'>{formatTimestamp(notification.timestamp)}</p>
               <CiTrash
@@ -98,7 +104,8 @@ function submitNotification(priority: string){
   return(
     <div
     onClick={(event) => event.stopPropagation()}
-     className="modal fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-md p-3 bg-white ring-black w-[500px] h-[300px]">
+     className="modal fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-md
+      p-3 bg-white ring-black w-[500px] h-[300px]">
       <div
       className='flex flex-col gap-5'>
         <IoMdClose

@@ -12,6 +12,8 @@ import '@mantine/dates/styles.css';
 import { MantineProvider } from "@mantine/core"
 import { fetchMealData } from "./Redux/MealPlannerSlice"
 import { closeSuggestedMeals } from "./Redux/MealPlannerSlice"
+import 'react-big-calendar/lib/css/react-big-calendar.css';
+import { closeEventsForm } from "./Redux/EventsSlice"
 
 
 
@@ -25,6 +27,7 @@ const budgetFormState = useTypedSelector((state) => state.FamilyBudget.budgetFor
 const eventsModifierState = useTypedSelector((state) => state.events.eventsModifier)
 const customData = useTypedSelector((state) => state.mealPlanner.customData)
 const suggestedMealsDisplayState = useTypedSelector((state) => state.mealPlanner.isSuggestedMealsDisplayOpen)
+const eventsFormState = useTypedSelector((state) => state.events.isEventFormOpen)
 
   return (
     <BrowserRouter>
@@ -39,6 +42,7 @@ const suggestedMealsDisplayState = useTypedSelector((state) => state.mealPlanner
        if(budgetFormState){dispatch(changeBudgetFormState(false))}
        if(eventsModifierState){dispatch(closeEventsModifier())}
        if(suggestedMealsDisplayState){dispatch(closeSuggestedMeals())}
+       if(eventsFormState){dispatch(closeEventsForm())}
 
        if(customData.find((meal) => meal.isSuggesting === true)){
 
@@ -49,7 +53,7 @@ const suggestedMealsDisplayState = useTypedSelector((state) => state.mealPlanner
        }
       }
       }
-     className="app flex relative flex-col min-h-screen">
+     className="app flex px-2 relative flex-col min-h-screen">
       {notificationModalState && <div className="absolute h-full w-full top-0 left-0 bg-black opacity-60"></div>}
       <NavBar />
       <AnimatedRoutes />

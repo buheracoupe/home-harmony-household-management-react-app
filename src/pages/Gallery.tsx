@@ -60,15 +60,16 @@ function Gallery() {
   }, [thisImageisShowing, currentImageIndex, imageModalState])
 
   return (
-    <div className="gallery-container mb-5">
+    <div className="gallery-container max-md:mt-20 md:mt-0 mb-5">
       
-      <div className="addMore mb-3 mt-2 rounded-full p-2 w-fit bg-secondary-dark hover:bg-secondary-light">
+      <div className="addMore mb-3 mx-auto transition-all duration-300 cursor-pointer hover:transform hover:scale-110
+       mt-2 rounded-full p-2 w-fit bg-secondary-dark hover:bg-secondary-light">
     <MdOutlineAddAPhoto className="h-12 w-12 text-slate-200 cursor-pointer"/>
       </div>
       <div className="grid auto-rows-32 gap-x-4 gap-y-20 grid-cols-3 md:grid-cols-4">
       {imageArray.map((image, index) => {
         return(
-          <div className={thisImageisShowing === image.id? "fixed top-10 left-1/2 transform mb-4 -translate-x-1/2 z-10 " : ""}>
+          <div className={thisImageisShowing === image.id? "fixed max-md:top-20 top-10 left-1/2 transform mb-4 -translate-x-1/2 z-10 " : ""}>
             <img 
             onClick={(event)=> {
               event.stopPropagation();
@@ -83,7 +84,7 @@ function Gallery() {
             <div>
         <IoCloseOutline
           onClick={() => setTheShowingImage(null)}
-          className="absolute cursor-pointer right-3 h-12 w-12 top-3 text-white hover:text-primary-dark"/>
+          className="absolute cursor-pointer right-3 h-12 w-12 top-10 text-white hover:text-primary-dark"/>
         <RxCaretLeft
           onClick={(event) => {
           const prevIndex = (currentImageIndex - 1 + imageArray.length) % imageArray.length;

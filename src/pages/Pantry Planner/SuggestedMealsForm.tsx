@@ -20,10 +20,10 @@ function SuggestedMealsDisplay() {
     const dispatch = useAppDispatch()
 
     useEffect(() => {
-        const sortedMeals = [...suggestedMeals].sort((a,b) => a.datePicker.getTime() - b.datePicker.getTime())
+        const sortedMeals = [...suggestedMeals].sort((a,b) => new Date(a.datePicker).getTime() - new Date(b.datePicker).getTime())
         const updatedMeals = sortedMeals.map((meal) => {
          const options: Intl.DateTimeFormatOptions = {weekday: "long", day: "numeric", month:"long", year: "numeric"}
-             const mealDate = meal.datePicker.toLocaleDateString("en-US", options)
+             const mealDate = new Date(meal.datePicker).toLocaleDateString("en-US", options)
              return (
                      {...meal, datePicker: mealDate}
              )
